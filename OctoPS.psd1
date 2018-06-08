@@ -83,7 +83,10 @@ FunctionsToExport = @('Set-OctoPrintHost',
     'Restart-OctoPrintJob.ps1',
     'Stop-OctoPrintJob',
     'Suspend-OctoPrintJob',
-    'Resume-OctoPrintJob')
+    'Resume-OctoPrintJob',
+    'Get-OctoPrintPrinterConnection',
+    'Invoke-OctoPrintPrinterConnect',
+    'Invoke-OctoPrintPrinterDisconnect')
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()

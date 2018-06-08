@@ -4,7 +4,7 @@ if (!(Test-Path variable:Global:OctoHost )) {
 
 switch ($PSVersionTable.Platform ) {
     "Unix" { $ConfigPath = "$($Env:HOME)/.octops/printservers.json" }
-    "Windows" { $ConfigPath = "$($Env:AppData)\.octops\printservers.json" }
+    "Win32NT" { $ConfigPath = "$($Env:AppData)\.octops\printservers.json" }
     Default {}
 }
 
@@ -38,3 +38,6 @@ $Global:OctoPSConfigPath = $ConfigPath
 . "$PSScriptRoot\Restart-OctoPrintJob.ps1"
 . "$PSScriptRoot\Suspend-OctoPrintJob.ps1"
 . "$PSScriptRoot\Resume-OctoPrintJob.ps1"
+. "$PSScriptRoot\Get-OctoPrintPrinterConnection.ps1"
+. "$PSScriptRoot\Invoke-OctoPrintPrinterConnect.ps1"
+. "$PSScriptRoot\Invoke-OctoPrintPrinterDisonnect.ps1"

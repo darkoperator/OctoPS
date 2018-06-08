@@ -1,4 +1,4 @@
-function Get-OctoPrintPrinter {
+function Get-OctoPrintPrinterState {
     [CmdletBinding()]
     param (
      # OctoPrint Host  Id
@@ -14,7 +14,31 @@ function Get-OctoPrintPrinter {
         [switch]
         $SkipCertificateCheck,
 
-        [Parameter( Mandatory = $false)]
+        # Include history of actions and temperatures.
+        [Parameter(Mandatory = $false)]
+        [switch]
+        $History,
+
+        # Number of entries from the history log to pull.
+        [Parameter(Mandatory = $false)]
+        [Int]
+        $Limit = 1,
+
+        # Exclude temeprature from hoistory.
+        [Parameter(mandatory = $false)]
+        [switch]
+        $ExcludeTemperature,
+
+         # Exclude state from hoistory.
+         [Parameter(mandatory = $false)]
+         [switch]
+         $ExcludeState,
+
+          # Exclude SD from hoistory.
+        [Parameter(mandatory = $false)]
+        [switch]
+        $ExcludeSD
+
 
 
     )
