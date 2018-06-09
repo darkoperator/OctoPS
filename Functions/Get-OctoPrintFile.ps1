@@ -1,3 +1,30 @@
+<#
+.SYNOPSIS
+    Get a list of files and their info from a OctoPrint Server.
+.DESCRIPTION
+    Get a list of files and their info from a OctoPrint Server.
+.EXAMPLE
+    PS C:\> Get-OctoPrintFile -FileType model
+
+
+        Name       : Fang_CR10_Short_40mm_Space.stl
+        Date       : 1/1/01 12:02:32 AM
+        Origin     : local
+        Path       : Fang_CR10_Short_40mm_Space.stl
+        Type       : model
+        Size       : 1872084
+        Hash       : 4420b2437bf986feebd37437581e2b341a675c0e
+        Prints     :
+        statistics :
+        References : @{download=http://192.168.1.237/downloads/files/local/Fang_CR10_Short_40mm_Space.stl; resource=http://192.168.1.237/api/files/local/Fang_CR10_Short_40mm_Space.stl}
+        HostId     : 1
+
+    Pull only model files from the server.
+.INPUTS
+    System.IO.FileInfo
+.OUTPUTS
+    OctoPrint.File
+#>
 function Get-OctoPrintFile {
     [CmdletBinding(DefaultParameterSetName = "All")]
     param (
@@ -30,7 +57,13 @@ function Get-OctoPrintFile {
             ValueFromPipelineByPropertyName = $true)]
         [SupportsWildcards()]
         [string]
-        $Name
+        $Name,
+
+        # Type of file to list.
+        [Parameter(Mandatory = $false)]
+        [ValidateSet('MachineCode','Model')]
+        [string[]]
+        $FileType = @('machinecode','model')
     )
     
     begin {
@@ -64,7 +97,7 @@ function Get-OctoPrintFile {
                 }
 
                 (Invoke-RestMethod @RestMethodParams).files | Foreach-Object {
-                    if ($_.type -eq "machinecode") {
+                    if ($_.type -in $FileType) {
                         if ($Name.Length -gt 0) {
                             if ($_.Name -like $Name) {
                                 $FProps = New-Object -TypeName System.Collections.Specialized.OrderedDictionary
@@ -116,7 +149,7 @@ function Get-OctoPrintFile {
             }
 
             (Invoke-RestMethod @RestMethodParams).files | Foreach-Object {
-                if ($_.type -eq "machinecode") {
+                if ($_.type -in $FileType ) {
                     if ($Name.Length -gt 0) {
                         if ($_.Name -like $Name) {
                             $FProps = New-Object -TypeName System.Collections.Specialized.OrderedDictionary

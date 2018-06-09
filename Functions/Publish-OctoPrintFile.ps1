@@ -1,17 +1,33 @@
+<#
+.SYNOPSIS
+    Short description
+.DESCRIPTION
+    Long description
+.EXAMPLE
+    PS C:\> <example usage>
+    Explanation of what the example does
+.INPUTS
+    Inputs (if any)
+.OUTPUTS
+    Output (if any)
+.NOTES
+    General notes
+#>
 function Publish-OctoPrintFile {
     [CmdletBinding()]
     param (
         # Printer Host Id
-        [Parameter(Mandatory=$false,
-                   ParameterSetName = 'Index')]
+        [Parameter(Mandatory = $false )]
         [Alias("HostId")]
         [int32[]]
         $Id = @(),
 
         # File to publish to OctoPrint server.
         [Parameter(Mandatory = $true,
-            Position = 0)]
+            Position = 0,
+            ValueFromPipelineByPropertyName = $True)]
         [ValidateScript({Test-Path -Path $_})]
+        [Alias('FullName')]
         [string]
         $Path,
 
@@ -38,14 +54,15 @@ function Publish-OctoPrintFile {
     )
 
     begin {
-        $fileinfo = Get-ItemProperty -Path $Path
-        $FilePath = $fileinfo.FullName
-        $UriPath = "/api/files/$($Location.ToLower())"
+
     }
 
     process
     {
 
+        $fileinfo = Get-ItemProperty -Path $Path
+        $FilePath = $fileinfo.FullName
+        $UriPath = "/api/files/$($Location.ToLower())"
 
         if ($Id.count -gt 0) {
             $PHosts = Get-OctoPrintHost -Id $Id
