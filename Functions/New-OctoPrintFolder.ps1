@@ -50,7 +50,7 @@ function New-OctoPrintFolder {
                 }
 
                 $Response = $RestClient.Execute($RestRequest)
-                $FileMeta = ($Response[1].Content).folder
+                $FileMeta = (ConvertFrom-Json $response.Content).Folder
                 $FProps = New-Object -TypeName System.Collections.Specialized.OrderedDictionary
                 $FProps.Add('Name',$FileMeta.name)
                 $FProps.Add('Origin',$FileMeta.origin)

@@ -41,12 +41,6 @@ function Get-OctoPrintFile {
         [switch]
         $Recurse,
 
-        # Path to list files for
-        [Parameter(Mandatory = $false,
-            ParameterSetName = "Targeted")]
-        [string]
-        $Path,
-
         # Skips certificate validation checks. This includes all validations such as expiration, revocation, trusted root authority, etc.
         [Parameter(Mandatory = $false)]
         [switch]
@@ -63,7 +57,13 @@ function Get-OctoPrintFile {
         [Parameter(Mandatory = $false)]
         [ValidateSet('MachineCode','Model')]
         [string[]]
-        $FileType = @('machinecode','model')
+        $FileType = @('machinecode','model'),
+
+        # Location of the files.
+        [Parameter(Mandatory = $false)]
+        [ValidateSet('Local',"SDCard")]
+        [string]
+        $Location = "Local"
     )
 
     begin {
@@ -71,13 +71,10 @@ function Get-OctoPrintFile {
             'Method'        = "Get"
         }
 
-        switch ($PSCmdlet.ParameterSetName) {
-            "All"      { $UriPath = "/api/files" }
-            "Targeted" { $UriPath = "/api/files/$($Path -creplace '^[^\/]*\/', '')" }
-            Default { $UriPath = "/api/files" }
-        }
+        $UriPath = "/api/files/$($Location.ToLower())"
 
         if ($Recurse) {
+            write-verbose -Message "Performing a recursive listing."
             $UriPath = $UriPath + "?recursive=true"
         }
 
@@ -156,7 +153,7 @@ function Get-OctoPrintFile {
                             $FProps.Add('Name',$_.Name)
                             $FProps.Add('Date',[datetime]$_.date)
                             $FProps.Add('Origin',$_.origin)
-                            $FProps.Add('Path',$_.path)
+                            $FProps.Add('Path',$_.path.value)
                             $FProps.Add('Type',$_.type)
                             $FProps.Add('Size',$_.size)
                             $FProps.Add('Hash',$_.hash)
@@ -173,7 +170,7 @@ function Get-OctoPrintFile {
                         $FProps.Add('Name',$_.Name)
                         $FProps.Add('Date',[datetime]$_.date)
                         $FProps.Add('Origin',$_.origin)
-                        $FProps.Add('Path',$_.path)
+                        $FProps.Add('Path',$_.path.value)
                         $FProps.Add('Type',$_.type)
                         $FProps.Add('Size',$_.size)
                         $FProps.Add('Hash',$_.hash)

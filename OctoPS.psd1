@@ -88,7 +88,8 @@ FunctionsToExport = @('Set-OctoPrintHost',
     'Invoke-OctoPrintPrinterConnect',
     'Invoke-OctoPrintPrinterDisconnect',
     'Get-OctoPrintPrinterState',
-    'Remove-OctoPrintItem')
+    'Remove-OctoPrintItem',
+    'Select-OctoPrintFile')
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 CmdletsToExport = @()

@@ -17,7 +17,8 @@ function Publish-OctoPrintFile {
     [CmdletBinding()]
     param (
         # Printer Host Id
-        [Parameter(Mandatory = $false )]
+        [Parameter(Mandatory = $false,
+            ValueFromPipelineByPropertyName = $true)]
         [Alias("HostId")]
         [int32[]]
         $Id = @(),
@@ -74,17 +75,20 @@ function Publish-OctoPrintFile {
                 [void]$RestRequest.AddHeader('X-Api-Key',$h.ApiKey)
                 $RestRequest.Method = [RestSharp.Method]::POST
                 [void]$RestRequest.AddFile('file',$FilePath, 'application/octet-stream')
-
+                Write-Verbose -Message "Uploading file $($Path)"
                 if ($Select) {
-                    $RestRequest.AddParameter("select", "true")
+                    Write-Verbose -Message "File will be selected after upload."
+                    [void]$RestRequest.AddParameter("select", "true")
                 }
 
                 if ($Print) {
-                    $RestRequest.AddParameter("print", "true")
+                    Write-Verbose -Message "File will be printed after upload."
+                    [void]$RestRequest.AddParameter("print", "true")
                 }
 
                 if ($RemotePath.Length -gt 0) {
-                    $RestRequest.AddParameter("path", "$($RemotePath -creplace '^[^\/]*\/', '')")
+                    Write-Verbose -Message "Uploading to path $($RemotePath)"
+                    [void]$RestRequest.AddParameter("path", "$($RemotePath -creplace '^[^\/]*\/', '')")
                 }
 
                 $Response = $RestClient.Execute($RestRequest)
@@ -108,20 +112,22 @@ function Publish-OctoPrintFile {
             $RestClient.BaseUrl =  "$($FirstOctoHost.Uri)$($UriPath)"
             [void]$RestRequest.AddHeader('X-Api-Key',$FirstOctoHost.ApiKey)
             $RestRequest.Method = [RestSharp.Method]::POST
+
+            Write-Verbose -Message "Uploading file $($Path)"
             [void]$RestRequest.AddFile('file',$FilePath, 'application/octet-stream')
 
-            if ($Select)
-            {
+            if ($Select) {
+                Write-Verbose -Message "File will be selected after upload."
                 [void]$RestRequest.AddParameter("select", "true")
             }
 
-            if ($Print)
-            {
+            if ($Print) {
+                Write-Verbose -Message "File will be printed after upload."
                 [void]$RestRequest.AddParameter("print", "true")
             }
 
-            if ($RemotePath.Length -gt 0)
-            {
+            if ($RemotePath.Length -gt 0) {
+                Write-Verbose -Message "Uploading to path $($RemotePath)"
                 [void]$RestRequest.AddParameter("path", "$($RemotePath -creplace '^[^\/]*\/', '')")
             }
 

@@ -43,3 +43,4 @@ $Global:OctoPSConfigPath = $ConfigPath
 . "$PSScriptRoot\Functions\Invoke-OctoPrintPrinterDisonnect.ps1"
 . "$PSScriptRoot\Functions\Get-OctoPrintPrinterState.ps1"
 . "$PSScriptRoot\Functions\Remove-OctoPrintItem.ps1"
+. "$PSScriptRoot\Functions\Select-OctoPrintFile.ps1"

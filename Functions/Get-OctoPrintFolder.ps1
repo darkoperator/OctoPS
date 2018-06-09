@@ -1,10 +1,24 @@
+<#
+.SYNOPSIS
+    Get name and information on folders on a OctoPrint server.
+.DESCRIPTION
+    Get name and information on folders on a OctoPrint server.
+.EXAMPLE
+    PS C:\> <example usage>
+    Explanation of what the example does
+.INPUTS
+    OctoPrint.Host'
+.OUTPUTS
+    OctoPrint.Folder
+#>
 function Get-OctoPrintFolder {
     [CmdletBinding(DefaultParameterSetName = "All")]
     param (
         # Printer Host Id
         [Parameter(Mandatory=$false,
                    ParameterSetName = 'Index',
-                   Position=0)]
+                   Position=0,
+                   ValueFromPipelineByPropertyName = $true)]
         [Alias('HostId')]
         [int32[]]
         $Id = @(),
@@ -16,12 +30,14 @@ function Get-OctoPrintFolder {
 
         # Path to list folders for
         [Parameter(Mandatory = $false,
-            ParameterSetName = "Targeted")]
+            ParameterSetName = "Targeted",
+            ValueFromPipelineByPropertyName = $true)]
         [string]
         $Path,
 
         # Skips certificate validation checks. This includes all validations such as expiration, revocation, trusted root authority, etc.
-        [Parameter(Mandatory = $false)]
+        [Parameter(Mandatory = $false,
+            ValueFromPipelineByPropertyName = $true)]
         [switch]
         $SkipCertificateCheck,
 
