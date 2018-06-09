@@ -3,7 +3,7 @@
 
 # OctoPS
 
-OctoPS is a PowerShell Core module for controling and automating one or more [OctoPring](https://www.octoprint.org) servers.
+OctoPS is a PowerShell Core module for controling and automating one or more [OctoPrint](https://www.octoprint.org) servers.
 At the moment the module is still under development and has been tested on MacOS and Windows PowerShell Core 6.0.1 against OctoPrint server 1.3.8.
 
 # License
