@@ -12,7 +12,7 @@
 RootModule = "$PSScriptRoot\OctoPS.psm1"
 
 # Version number of this module.
-ModuleVersion = '0.1'
+ModuleVersion = '0.1-Dev'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
