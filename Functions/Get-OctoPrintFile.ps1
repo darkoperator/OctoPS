@@ -65,7 +65,7 @@ function Get-OctoPrintFile {
         [string[]]
         $FileType = @('machinecode','model')
     )
-    
+
     begin {
         $RestMethodParams = @{
             'Method'        = "Get"
@@ -103,7 +103,7 @@ function Get-OctoPrintFile {
                                 $FProps = New-Object -TypeName System.Collections.Specialized.OrderedDictionary
                                 $FProps.Add('Name',$_.Name)
                                 $FProps.Add('Date',[datetime]$_.date)
-                                $FProps.Add('Origin',$_.origin)
+                                $FProps.Add('Location',$_.origin)
                                 $FProps.Add('Path',$_.path)
                                 $FProps.Add('Type',$_.type)
                                 $FProps.Add('Size',$_.size)
@@ -120,7 +120,7 @@ function Get-OctoPrintFile {
                             $FProps = New-Object -TypeName System.Collections.Specialized.OrderedDictionary
                             $FProps.Add('Name',$_.Name)
                             $FProps.Add('Date',[datetime]$_.date)
-                            $FProps.Add('Origin',$_.origin)
+                            $FProps.Add('Location',$_.origin)
                             $FProps.Add('Path',$_.path)
                             $FProps.Add('Type',$_.type)
                             $FProps.Add('Size',$_.size)
