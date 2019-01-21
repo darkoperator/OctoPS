@@ -1,4 +1,4 @@
-function Set-OctoPrintHost {
+function Set-OctoPSHost {
     [CmdletBinding(DefaultParameterSetName = 'New')]
     param (
         # Friendly name for OctoPi Server

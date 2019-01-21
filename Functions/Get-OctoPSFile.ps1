@@ -4,7 +4,7 @@
 .DESCRIPTION
     Get a list of files and their info from a OctoPrint Server.
 .EXAMPLE
-    PS C:\> Get-OctoPrintFile -FileType model
+    PS C:\> Get-OctoPSFile -FileType model
 
 
         Name       : Fang_CR10_Short_40mm_Space.stl
@@ -25,7 +25,7 @@
 .OUTPUTS
     OctoPrint.File
 #>
-function Get-OctoPrintFile {
+function Get-OctoPSFile {
     [CmdletBinding(DefaultParameterSetName = "All")]
     param (
         # Printer Host Id
@@ -83,12 +83,17 @@ function Get-OctoPrintFile {
     process {
         if ($Id.count -gt 0) {
             $PHosts = Get-OctoPrintHost -Id $Id
+        }
+        else {
+            $PHosts = Get-OctoPrintHost | Select-Object -First 1
+        }
+        foreach ($h in $PHosts) {
             foreach ($h in $PHosts) {
 
                 $RestMethodParams.Add('URI',"$($h.Uri)$($UriPath)")
                 $RestMethodParams.Add('Headers',@{'X-Api-Key' = $h.ApiKey})
 
-                if ($Parameter)
+                if ($SkipCertificateCheck)
                 {
                     $RestMethodParams.Add('SkipCertificateCheck', $SkipCertificateCheck)
                 }
@@ -130,57 +135,6 @@ function Get-OctoPrintFile {
                             $PPObj.pstypenames[0] = 'OctoPrint.File'
                             $PPObj
                         }
-                    }
-                }
-
-
-            }
-        } else {
-            $FirstOctoHost = Get-OctoPrintHost | Select-Object -First 1
-            $RestMethodParams.Add('URI',"$($FirstOctoHost.Uri)$($UriPath)")
-            $RestMethodParams.Add('Headers', @{'X-Api-Key' = $FirstOctoHost.ApiKey})
-
-            if ($Parameter)
-            {
-                $RestMethodParams.Add('SkipCertificateCheck', $SkipCertificateCheck)
-            }
-
-            (Invoke-RestMethod @RestMethodParams).files | Foreach-Object {
-                if ($_.type -in $FileType ) {
-                    if ($Name.Length -gt 0) {
-                        if ($_.Name -like $Name) {
-                            $FProps = New-Object -TypeName System.Collections.Specialized.OrderedDictionary
-                            $FProps.Add('Name',$_.Name)
-                            $FProps.Add('Date',[datetime]$_.date)
-                            $FProps.Add('Origin',$_.origin)
-                            $FProps.Add('Path',$_.path.value)
-                            $FProps.Add('Type',$_.type)
-                            $FProps.Add('Size',$_.size)
-                            $FProps.Add('Hash',$_.hash)
-                            $FProps.Add('Prints',$_.prints)
-                            $FProps.Add('statistics',$_.statistics)
-                            $FProps.Add('References',$_.refs)
-                            $FProps.Add('HostId',$FirstOctoHost.Id)
-                            $PPObj = New-Object -TypeName psobject -Property $FProps
-                            $PPObj.pstypenames[0] = 'OctoPrint.File'
-                            $PPObj
-                        }
-                    } else {
-                        $FProps = New-Object -TypeName System.Collections.Specialized.OrderedDictionary
-                        $FProps.Add('Name',$_.Name)
-                        $FProps.Add('Date',[datetime]$_.date)
-                        $FProps.Add('Origin',$_.origin)
-                        $FProps.Add('Path',$_.path.value)
-                        $FProps.Add('Type',$_.type)
-                        $FProps.Add('Size',$_.size)
-                        $FProps.Add('Hash',$_.hash)
-                        $FProps.Add('Prints',$_.prints)
-                        $FProps.Add('statistics',$_.statistics)
-                        $FProps.Add('References',$_.refs)
-                        $FProps.Add('HostId',$FirstOctoHost.Id)
-                        $PPObj = New-Object -TypeName psobject -Property $FProps
-                        $PPObj.pstypenames[0] = 'OctoPrint.File'
-                        $PPObj
                     }
                 }
             }

@@ -11,7 +11,7 @@
 .OUTPUTS
     OctoPrint.Folder
 #>
-function Get-OctoPrintFolder {
+function Get-OctoPSFolder {
     [CmdletBinding(DefaultParameterSetName = "All")]
     param (
         # Printer Host Id
@@ -69,34 +69,26 @@ function Get-OctoPrintFolder {
     process {
         if ($Id.count -gt 0) {
             $PHosts = Get-OctoPrintHost -Id $Id
-            foreach ($h in $PHosts) {
+        }
+        else {
+            $PHosts = Get-OctoPrintHost | Select-Object -First 1
+        }
+        foreach ($h in $PHosts) {
 
-                $RestMethodParams.Add('URI',"$($h.Uri)$($UriPath)")
-                $RestMethodParams.Add('Headers',@{'X-Api-Key' = $h.ApiKey})
+            $RestMethodParams.Add('URI',"$($h.Uri)$($UriPath)")
+            $RestMethodParams.Add('Headers',@{'X-Api-Key' = $h.ApiKey})
 
-                if ($Parameter)
-                {
-                    $RestMethodParams.Add('SkipCertificateCheck', $SkipCertificateCheck)
-                }
+            if ($SkipCertificateCheck)
+            {
+                $RestMethodParams.Add('SkipCertificateCheck', $SkipCertificateCheck)
+            }
+            (Invoke-RestMethod @RestMethodParams).files | Foreach-Object {
+                if ($_.type -eq "folder") {
 
-                (Invoke-RestMethod @RestMethodParams).files | Foreach-Object {
-                    if ($_.type -eq "folder") {
-                        if ($Name.Length -gt 0) {
-                            if ($_.Name -like $Name) {
-                                $FProps = New-Object -TypeName System.Collections.Specialized.OrderedDictionary
-                                $FProps.Add('Name',$_.Name)
-                                $FProps.Add('Origin',$_.origin)
-                                $FProps.Add('Path',$_.path)
-                                $FProps.Add('Type',$_.type)
-                                $FProps.Add('References',$_.refs)
-                                $FProps.Add('HostId',$h.Id)
-                                $PPObj = New-Object -TypeName psobject -Property $FProps
-                                $PPObj.pstypenames[0] = 'OctoPrint.Folder'
-                                $PPObj
-                            }
-                        } else {
+                    if ($Name.Length -gt 0) {
+                        if ($_.Name -like $Name) {
                             $FProps = New-Object -TypeName System.Collections.Specialized.OrderedDictionary
-                            $FProps.Add('Name',$_.Name)
+                            $FProps.Add('Name',$_.name)
                             $FProps.Add('Origin',$_.origin)
                             $FProps.Add('Path',$_.path)
                             $FProps.Add('Type',$_.type)
@@ -106,50 +98,21 @@ function Get-OctoPrintFolder {
                             $PPObj.pstypenames[0] = 'OctoPrint.Folder'
                             $PPObj
                         }
-                    }
-                }
-
-
-            }
-        } else {
-            $FirstOctoHost = Get-OctoPrintHost | Select-Object -First 1
-            $RestMethodParams.Add('URI',"$($FirstOctoHost.Uri)$($UriPath)")
-            $RestMethodParams.Add('Headers', @{'X-Api-Key' = $FirstOctoHost.ApiKey})
-
-            if ($Parameter)
-            {
-                $RestMethodParams.Add('SkipCertificateCheck', $SkipCertificateCheck)
-            }
-
-            (Invoke-RestMethod @RestMethodParams).files | Foreach-Object {
-                if ($_.type -eq "folder") {
-                    if ($Name.Length -gt 0) {
-                        if ($_.Name -like $Name) {
-                            $FProps = New-Object -TypeName System.Collections.Specialized.OrderedDictionary
-                            $FProps.Add('Name',$_.Name)
-                            $FProps.Add('Origin',$_.origin)
-                            $FProps.Add('Path',$_.path)
-                            $FProps.Add('Type',$_.type)
-                            $FProps.Add('References',$_.refs)
-                            $FProps.Add('HostId',$FirstOctoHost.Id)
-                            $PPObj = New-Object -TypeName psobject -Property $FProps
-                            $PPObj.pstypenames[0] = 'OctoPrint.Folder'
-                            $PPObj
-                        }
                     } else {
                         $FProps = New-Object -TypeName System.Collections.Specialized.OrderedDictionary
-                        $FProps.Add('Name',$_.Name)
+                        $FProps.Add('Name',$_.name)
                         $FProps.Add('Origin',$_.origin)
                         $FProps.Add('Path',$_.path)
                         $FProps.Add('Type',$_.type)
                         $FProps.Add('References',$_.refs)
-                        $FProps.Add('HostId',$FirstOctoHost.Id)
+                        $FProps.Add('HostId',$h.Id)
                         $PPObj = New-Object -TypeName psobject -Property $FProps
                         $PPObj.pstypenames[0] = 'OctoPrint.Folder'
                         $PPObj
                     }
                 }
             }
+
 
         }
     }

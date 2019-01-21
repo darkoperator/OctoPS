@@ -1,4 +1,4 @@
-function Suspend-OctoPrintJob {
+function Restart-OctoPSJob {
     [CmdletBinding(DefaultParameterSetName = "All")]
     param (
         # Printer Host Id
@@ -14,8 +14,7 @@ function Suspend-OctoPrintJob {
     )
     
     begin {
-        $commandBody = ConvertTo-Json -InputObject @{"command" = "pause"
-                                                     "action" = "pause"}
+        $commandBody = ConvertTo-Json -InputObject @{"command" = "restart"}
         $RestMethodParams = @{
             'Method'        = "Post"
             'ContentType'   = 'application/json'
@@ -27,30 +26,18 @@ function Suspend-OctoPrintJob {
     process {
         if ($Id.count -gt 0) {
             $PHosts = Get-OctoPrintHost -Id $Id
-            foreach ($h in $PHosts) {
+        }
+        else {
+            $PHosts = Get-OctoPrintHost | Select-Object -First 1
+        }
+        foreach ($h in $PHosts) {
+            $RestMethodParams.Add('URI',"$($h.Uri)/api/job")
+            $RestMethodParams.Add('Headers',@{'X-Api-Key' = $h.ApiKey})
 
-                $RestMethodParams.Add('URI',"$($h.Uri)/api/job")
-                $RestMethodParams.Add('Headers',@{'X-Api-Key' = $h.ApiKey})
-
-                if ($Parameter)
-                {
-                    $RestMethodParams.Add('SkipCertificateCheck', $SkipCertificateCheck)
-                }
-
-                Invoke-RestMethod @RestMethodParams
-
-
-            }
-        } else {
-            $FirstOctoHost = Get-OctoPrintHost | Select-Object -First 1
-            $RestMethodParams.Add('URI',"$($FirstOctoHost.Uri)/api/job")
-            $RestMethodParams.Add('Headers', @{'X-Api-Key' = $FirstOctoHost.ApiKey})
-
-            if ($Parameter)
+            if ($SkipCertificateCheck)
             {
                 $RestMethodParams.Add('SkipCertificateCheck', $SkipCertificateCheck)
             }
-
             Invoke-RestMethod @RestMethodParams
         }
     }

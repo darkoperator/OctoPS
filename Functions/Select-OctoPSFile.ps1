@@ -13,7 +13,7 @@
 .NOTES
     General notes
 #>
-function Select-OctoPrintFile {
+function Select-OctoPSFile {
     [CmdletBinding(DefaultParameterSetName = "none")]
     param (
 
@@ -69,29 +69,18 @@ function Select-OctoPrintFile {
     process {
         if ($Id.count -gt 0) {
             $PHosts = Get-OctoPrintHost -Id $Id
-            foreach ($h in $PHosts) {
+        }
+        else {
+            $PHosts = Get-OctoPrintHost | Select-Object -First 1
+        }
+        foreach ($h in $PHosts) {
+            $RestMethodParams.Add('URI',"$($h.Uri)$($UriPath)")
+            $RestMethodParams.Add('Headers',@{'X-Api-Key' = $h.ApiKey})
 
-                $RestMethodParams.Add('URI',"$($h.Uri)$($UriPath)")
-                $RestMethodParams.Add('Headers',@{'X-Api-Key' = $h.ApiKey})
-
-                if ($Parameter)
-                {
-                    $RestMethodParams.Add('SkipCertificateCheck', $SkipCertificateCheck)
-                }
-
-                Invoke-RestMethod @RestMethodParams
-
-            }
-        } else {
-            $FirstOctoHost = Get-OctoPrintHost | Select-Object -First 1
-            $RestMethodParams.Add('URI',"$($FirstOctoHost.Uri)$($UriPath)")
-            $RestMethodParams.Add('Headers', @{'X-Api-Key' = $FirstOctoHost.ApiKey})
-
-            if ($Parameter)
+            if ($SkipCertificateCheck)
             {
                 $RestMethodParams.Add('SkipCertificateCheck', $SkipCertificateCheck)
             }
-
             Invoke-RestMethod @RestMethodParams
         }
     }

@@ -1,4 +1,4 @@
-function Get-OctoPrintVersion {
+function Get-OctoPSVersion {
     [CmdletBinding()]
     param (
      # OctoPrint Host  Id
@@ -24,30 +24,22 @@ function Get-OctoPrintVersion {
     process {
         if ($Id.count -gt 0) {
             $PHosts = Get-OctoPrintHost -Id $Id
-            foreach ($h in $PHosts) {
-
-                $RestMethodParams.Add('URI',"$($h.Uri)/api/version")
-                $RestMethodParams.Add('Headers',@{'X-Api-Key' = $h.ApiKey})
-
-                if ($Parameter)
-                {
-                    $RestMethodParams.Add('SkipCertificateCheck', $SkipCertificateCheck)
-                }
-
-                Invoke-RestMethod @RestMethodParams
-            }
         } else {
-            $FirstOctoHost = Get-OctoPrintHost | Select-Object -First 1
-            $RestMethodParams.Add('URI',"$($FirstOctoHost.Uri)/api/version")
-            $RestMethodParams.Add('Headers', @{'X-Api-Key' = $FirstOctoHost.ApiKey})
+            $PHosts = Get-OctoPrintHost 
+        }
+        foreach ($h in $PHosts) {
 
-            if ($Parameter)
+            $RestMethodParams.Add('URI',"$($h.Uri)/api/version")
+            $RestMethodParams.Add('Headers',@{'X-Api-Key' = $h.ApiKey})
+
+            if ($SkipCertificateCheck)
             {
                 $RestMethodParams.Add('SkipCertificateCheck', $SkipCertificateCheck)
             }
 
             Invoke-RestMethod @RestMethodParams
         }
+
     }
     
     end {

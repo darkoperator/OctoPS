@@ -4,13 +4,13 @@
 .DESCRIPTION
     Deletes a specified file or folder from a OctoPrint server.
 .EXAMPLE
-    PS C:\> Get-OctoPrintItem -FileType model | Remove-OctoPrintFile -verbose
+    PS C:\> Get-OctoPSItem -FileType model | Remove-OctoPrintFile -verbose
     Delete all model files from the first OctoPrint Server.
 .INPUTS
     OctoPrint.File
     OctoPrint.Folder
 #>
-function Remove-OctoPrintItem {
+function Remove-OctoPSItem {
     [CmdletBinding()]
     param (
         # Printer Host Id
@@ -47,28 +47,19 @@ function Remove-OctoPrintItem {
         $UriPath = "/api/files/$($location.ToLower())/$($Path)"
         if ($Id.count -gt 0) {
             $PHosts = Get-OctoPrintHost -Id $Id
-            foreach ($h in $PHosts) {
+        }
+        else {
+            $PHosts = Get-OctoPrintHost | Select-Object -First 1
+        }
+        foreach ($h in $PHosts) {
+            $RestMethodParams.Add('URI',"$($h.Uri)$($UriPath)")
+            $RestMethodParams.Add('Headers',@{'X-Api-Key' = $h.ApiKey})
 
-                $RestMethodParams.Add('URI',"$($h.Uri)$($UriPath)")
-                $RestMethodParams.Add('Headers',@{'X-Api-Key' = $h.ApiKey})
-
-                if ($Parameter)
-                {
-                    $RestMethodParams.Add('SkipCertificateCheck', $SkipCertificateCheck)
-                }
-                Write-Verbose -Message "Deleting file at $($Location) named $($Path) from host with Id $($h.Id)"
-                Invoke-RestMethod @RestMethodParams
-            }
-        } else {
-            $FirstOctoHost = Get-OctoPrintHost | Select-Object -First 1
-            $RestMethodParams.Add('URI',"$($FirstOctoHost.Uri)$($UriPath)")
-            $RestMethodParams.Add('Headers', @{'X-Api-Key' = $FirstOctoHost.ApiKey})
-
-            if ($Parameter)
+            if ($SkipCertificateCheck)
             {
                 $RestMethodParams.Add('SkipCertificateCheck', $SkipCertificateCheck)
             }
-            Write-Verbose -Message "Deleting file at $($Location) named $($Path) from host with Id $($FirstOctoHost.Id)"
+            Write-Verbose -Message "Deleting file at $($Location) named $($Path) from host with Id $($h.Id)"
             Invoke-RestMethod @RestMethodParams
         }
     }

@@ -1,4 +1,4 @@
-function Remove-OctoPrintHost
+function Remove-OctoPSHost
 {
     [CmdletBinding()]
     param(
