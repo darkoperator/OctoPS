@@ -8,7 +8,7 @@ function Remove-OctoPSHost
                    Position=0,
                    ValueFromPipelineByPropertyName=$true)]
         [int32[]]
-        $Id = @()
+        $Id
     )
 
     Begin{}
