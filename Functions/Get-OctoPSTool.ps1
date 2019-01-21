@@ -37,7 +37,7 @@ function Get-OctoPSTool {
             {
                 $RestMethodParams.Add('SkipCertificateCheck', $SkipCertificateCheck)
             }
-            
+
             Invoke-RestMethod @RestMethodParams| Foreach-Object {
                 $TProps = New-Object -TypeName System.Collections.Specialized.OrderedDictionary
                 $toolname = ($_.PSObject.Properties).name
@@ -45,6 +45,7 @@ function Get-OctoPSTool {
                 $TProps.Add("Temperature", $_."$($toolname)".actual)
                 $TProps.Add("Target", $_."$($toolname)".target)
                 $TProps.Add("Offset", $_."$($toolname)".offset)
+                $TProps.Add('HostId',$h.Id)
                 $ToolObj = New-Object -TypeName psobject -Property $TProps
                 $ToolObj
             }

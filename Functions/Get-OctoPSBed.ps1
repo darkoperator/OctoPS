@@ -45,6 +45,7 @@ function Get-OctoPSBed {
                 $TProps.Add("Temperature", $_."$($toolname)".actual)
                 $TProps.Add("Target", $_."$($toolname)".target)
                 $TProps.Add("Offset", $_."$($toolname)".offset)
+                $TProps.Add('HostId',$h.Id)
                 $ToolObj = New-Object -TypeName psobject -Property $TProps
                 $ToolObj
             }
