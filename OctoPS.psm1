@@ -24,7 +24,7 @@ $Global:OctoPSConfigPath = $ConfigPath
 # Load Functions
 
 . "$PSScriptRoot\Functions\Set-OctoPSHost.ps1"
-. "$PSScriptRoot\Functions\Get-OctoPrintHost.ps1"
+. "$PSScriptRoot\Functions\Get-OctoPSHost.ps1"
 . "$PSScriptRoot\Functions\Remove-OctoPSHost.ps1"
 . "$PSScriptRoot\Functions\Get-OctoPSVersion.ps1"
 . "$PSScriptRoot\Functions\Get-OctoPSPrinterProfile.ps1"

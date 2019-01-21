@@ -1,4 +1,4 @@
-function Get-OctoPrintHost
+function Get-OctoPSHost
 {
     [CmdletBinding()]
     param(

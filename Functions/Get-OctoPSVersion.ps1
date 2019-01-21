@@ -23,9 +23,9 @@ function Get-OctoPSVersion {
     
     process {
         if ($Id.count -gt 0) {
-            $PHosts = Get-OctoPrintHost -Id $Id
+            $PHosts = Get-OctoPSHost -Id $Id
         } else {
-            $PHosts = Get-OctoPrintHost 
+            $PHosts = Get-OctoPSHost 
         }
         foreach ($h in $PHosts) {
 

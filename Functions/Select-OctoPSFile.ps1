@@ -68,10 +68,10 @@ function Select-OctoPSFile {
 
     process {
         if ($Id.count -gt 0) {
-            $PHosts = Get-OctoPrintHost -Id $Id
+            $PHosts = Get-OctoPSHost -Id $Id
         }
         else {
-            $PHosts = Get-OctoPrintHost | Select-Object -First 1
+            $PHosts = Get-OctoPSHost | Select-Object -First 1
         }
         foreach ($h in $PHosts) {
             $RestMethodParams.Add('URI',"$($h.Uri)$($UriPath)")
