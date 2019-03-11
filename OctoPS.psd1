@@ -33,7 +33,7 @@ Copyright = '(c) Carlos Perez carlos_perez@darkoperator.com. All rights reserved
 # Description = ''
 
 # Minimum version of the PowerShell engine required by this module
-PowerShellVersion = '6.0'
+PowerShellVersion = '5.1'
 
 # Name of the PowerShell host required by this module
 # PowerShellHostName = ''
@@ -69,7 +69,7 @@ RequiredAssemblies = @("$PSScriptRoot\Assemblies\RestSharp.dll")
 # NestedModules = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = @('Set-OctoPrintHost',
+FunctionsToExport = @('Set-OctoPSHost',
     'Get-OctoPSHost',
     'Remove-OctoPSHost',
     'Get-OctoPSVersion',
