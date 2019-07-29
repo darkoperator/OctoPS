@@ -4,7 +4,7 @@
 .DESCRIPTION
     Get a list of files and their info from a OctoPrint Server.
 .EXAMPLE
-    PS C:\> Get-OctoPSFile -FileType model
+    PS C:\> Get-OctoPSFile -FileType model -SkipCertificateCheck
 
 
         Name       : Fang_CR10_Short_40mm_Space.stl
@@ -20,6 +20,28 @@
         HostId     : 1
 
     Pull only model files from the server.
+.EXAMPLE
+    PS C:\> Get-OctoPSFile -SkipCertificateCheck -FileType MachineCode
+
+
+        Name       : 3DBenchy.gcode
+        Date       : 1/1/01 12:02:36 AM
+        Location   : local
+        Path       : 3DBenchy.gcode
+        Type       : machinecode
+        Size       : 3889019
+        Hash       : c7821d986cef37a82e2c4c8cad5c96e626643d5f
+        Prints     : @{failure=1; last=; success=0}
+        statistics : @{averagePrintTime=; lastPrintTime=}
+        References : @{download=https://192.168.1.237/downloads/files/local/3DBenchy.gcode; resource=https://192.168.1.237/api/files/local/3DBenchy.gcode}
+        HostId     : 1
+
+        Pull only MachineCode files from the server.
+
+.EXAMPLE
+    PS C:\> Get-OctoPSFile -Id 1 -FileType MachineCode -SkipCertificateCheck -Name *xyz*
+
+    Find all gcode files with xyz in the name. 
 .INPUTS
     System.IO.FileInfo
 .OUTPUTS
@@ -53,7 +75,7 @@ function Get-OctoPSFile {
         [string]
         $Name,
 
-        # Type of file to list.
+        # Type of file to list. STL = Model, GCode = MachineCode.
         [Parameter(Mandatory = $false)]
         [ValidateSet('MachineCode','Model')]
         [string[]]

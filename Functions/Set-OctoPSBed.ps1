@@ -1,4 +1,15 @@
 function Set-OctoPSBed {
+    <#
+    .SYNOPSIS
+        Set the bed temparature for a printer on a OctoPrint server.
+    .DESCRIPTION
+        Set the bed temparature for a printer on a OctoPrint server.
+    .EXAMPLE
+        PS C:\> Set-OctoPSBed -SkipCertificateCheck -TargetTemp 60
+        Set the temperature of the bed to 60 celcius.
+    .INPUTS
+        Int32
+    #>
     [CmdletBinding(DefaultParameterSetName = "Temp")]
     param (
         # OctoPrint Host  Id

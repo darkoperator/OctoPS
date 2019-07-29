@@ -1,4 +1,15 @@
 function Resume-OctoPSJob {
+     <#
+    .SYNOPSIS
+        Resume the current job on a OctoPrint server.
+    .DESCRIPTION
+        Resume the current job on a OctoPrint server.
+    .EXAMPLE
+        PS C:\> Resume-OctoPSJob -Id 1 -SkipCertificateCheck
+        Resume the current print job on the OctoPrint server with Id 1
+    .INPUTS
+        Int32
+    #>
     [CmdletBinding(DefaultParameterSetName = "All")]
     param (
         # Printer Host Id

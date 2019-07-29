@@ -1,4 +1,31 @@
 function Get-OctoPSJob {
+    <#
+    .SYNOPSIS
+        Get current job information on one or more stored on a OctoPrint server.
+    .DESCRIPTION
+        Get current job information on one or more stored on a OctoPrint server.
+    .EXAMPLE
+        PS > Get-OctoPSJob -SkipCertificateCheck        
+
+
+        File          : Concealed_Cuff_Key.gcode
+        Completion    : 100%
+        FilePosition  : 744661
+        PrintTime     : 00:14:03
+        PrintTimeLeft : 00:00:00
+        Progress      : 
+        Target        : @{AveragePrintTime=843.760487348773; EstimatedPrintTime=872.828690189309; Filament=; File=; LastPrintTIme=843.760487348773}
+        FileInfo      : @{date=1562790860; display=Concealed Cuff Key.gcode; name=Concealed_Cuff_Key.gcode; origin=local; path=Concealed_Cuff_Key.gcode; size=744661}
+        State         : Operational
+        HostId        : 1
+
+        Get information on the current job. 
+
+    .INPUTS
+        Int32
+    .OUTPUTS
+        OctoPrint.Job
+    #>
     [CmdletBinding(DefaultParameterSetName = "All")]
     param (
         # Printer Host Id
@@ -41,7 +68,6 @@ function Get-OctoPSJob {
             Invoke-RestMethod @RestMethodParams| Foreach-Object {
                 $JobProps = New-Object -TypeName System.Collections.Specialized.OrderedDictionary
                 $TargetInfoProps = New-Object -TypeName System.Collections.Specialized.OrderedDictionary
-                $ProgressProps = New-Object -TypeName System.Collections.Specialized.OrderedDictionary
 
                 # Create an object for the job target info.
                 $TargetInfoProps.Add('AveragePrintTime',$_.job.averagePrintTime)
@@ -51,24 +77,24 @@ function Get-OctoPSJob {
                 $TargetInfoProps.Add('LastPrintTIme',$_.job.lastPrintTIme)
                 $TargetInfoObj = New-Object -TypeName psobject -Property $TargetInfoProps
 
-                # Progress Object
-
-                $ProgressProps.Add('Completion', "$([int]$_.progress.completion)%")
-                $ProgressProps.Add('FilePosition', $_.progress.filepos)
+                # Progress Info
+                $JobProps.Add('File',$_.job.file.Name)
+                $JobProps.Add('Completion', "$([int]$_.progress.completion)%")
+                $JobProps.Add('FilePosition', $_.progress.filepos)
                 $tspt =  [timespan]::fromseconds($_.progress.printTime)
                 $printTime = ($tspt.ToString("hh\:mm\:ss"))
-                $ProgressProps.Add('PrintTime', $printTime)
+                $JobProps.Add('PrintTime', $printTime)
                 $tspl =  [timespan]::fromseconds($_.progress.printTimeLeft)
                 $printTimeLeft = ($tspl.ToString("hh\:mm\:ss"))
-                $ProgressProps.Add('PrintTimeLeft', $printTimeLeft)
-                $ProgressObj = New-Object -TypeName psobject -Property $ProgressProps
+                $JobProps.Add('PrintTimeLeft', $printTimeLeft)
 
                 $JobProps.Add('Progress',$ProgressObj)
                 $JobProps.Add('Target', $TargetInfoObj)
+                $JobProps.Add('FileInfo',$_.job.file)
                 $JobProps.Add('State', $_.state)
                 $JobProps.Add('HostId',$h.Id)
                 $jObj = New-Object -TypeName psobject -Property $JobProps
-                $jObj.pstypenames[0] = 'OctoPrint.File'
+                $jObj.pstypenames[0] = 'OctoPrint.Job'
                 $jObj
             }
         }

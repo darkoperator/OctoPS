@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Short description
+    Retrieves the current state of the printer on a OctoPrint server.
 .DESCRIPTION
     Retrieves the current state of the printer. Returned information includes:
 
@@ -12,7 +12,7 @@
     history by supplying the History parameter. The amount of data points to return
     here can be limited using the Limit parameter, has a default value of 1.
 .EXAMPLE
-    PS C:\> <example usage>
+    PS C:\> Get-OctoPSPrinterState -SkipCertificateCheck
     Explanation of what the example does
 .INPUTS
     Inputs (if any)
@@ -103,7 +103,26 @@ function Get-OctoPSPrinterState {
                 $RestMethodParams.Add('SkipCertificateCheck', $SkipCertificateCheck)
             }
 
-            Invoke-RestMethod @RestMethodParams
+            $StateInfo = (Invoke-RestMethod @RestMethodParams)
+            $tools = @()
+            $PPProps = New-Object -TypeName System.Collections.Specialized.OrderedDictionary
+            $PPProps.Add('SDCard',$StateInfo.sd.ready)
+            $PPProps.Add('State',$StateInfo.state.text)
+            $PPProps.Add('BedTemp',$StateInfo.temperature.bed)
+            $StateInfo.temperature | ForEach-Object {
+                $Component = $_
+                $Component.psobject.properties | ForEach-Object {
+                    if ($_.name -like "tool*") {
+                        Write-Verbose $_.name
+                        $tools += New-Object -TypeName psobject -Property @{"$($_.name)" = $Component."$($_.name)"}
+                    }
+                }
+            }
+            $PPProps.Add('Tool',$tools)
+            $PPProps.Add('HostId',$h.Id)
+            $PPObj = New-Object -TypeName psobject -Property $PPProps
+            $PPObj.pstypenames[0] = 'OctoPrint.PrinterState'
+            $PPObj
         } 
     }
 

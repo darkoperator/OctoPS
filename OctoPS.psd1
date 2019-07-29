@@ -12,7 +12,7 @@
 RootModule = "$PSScriptRoot\OctoPS.psm1"
 
 # Version number of this module.
-ModuleVersion = '0.1'
+ModuleVersion = '0.2'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -80,7 +80,7 @@ FunctionsToExport = @('Set-OctoPSHost',
     'New-OctoPSFolder',
     'Get-OctoPSJob',
     'Start-OctoPSJob',
-    'Restart-OctoPSJob.ps1',
+    'Restart-OctoPSJob',
     'Stop-OctoPSJob',
     'Suspend-OctoPSJob',
     'Resume-OctoPSJob',

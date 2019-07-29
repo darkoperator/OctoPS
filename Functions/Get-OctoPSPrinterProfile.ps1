@@ -1,4 +1,29 @@
 function Get-OctoPSPrinterProfile {
+    <#
+    .SYNOPSIS
+        Get the current printer connection settings and state on a OctoPrint server.
+    .DESCRIPTION
+        Get the current printer connection settings and state on a OctoPrint server.
+    .EXAMPLE
+        PS C:\> Get-OctoPSJob -SkipCertificateCheck -Id 1     
+
+
+            File          : Concealed_Cuff_Key.gcode
+            Completion    : 100%
+            FilePosition  : 744661
+            PrintTime     : 00:14:03
+            PrintTimeLeft : 00:00:00
+            Progress      : 
+            Target        : @{AveragePrintTime=843.760487348773; EstimatedPrintTime=872.828690189309; Filament=; File=; LastPrintTIme=843.760487348773}
+            State         : Operational
+            HostId        : 1
+
+        Get the printer connection settings. 
+    .INPUTS
+        Int32
+    .OUTPUTS
+        OctoPrint.PrinterProfile
+    #>
     [CmdletBinding()]
     param (
      # OctoPrint Host  Id

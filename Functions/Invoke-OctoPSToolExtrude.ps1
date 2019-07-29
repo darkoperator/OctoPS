@@ -1,4 +1,16 @@
 function Invoke-OctoPSToolExtrude {
+    <#
+    .SYNOPSIS
+        Extrude a given amount of material on the default tool for a printer on a OctoPrint server.
+    .DESCRIPTION
+        Extrude a given amount of material on the default tool for a printer on a OctoPrint server.
+    .EXAMPLE
+        PS C:\> Invoke-OctoPSToolExtrude -Id 1 -SkipCertificateCheck -Speed 100 -Amount 20
+        Extrude 20mm of material at 100mm per minute. 
+    .INPUTS
+        Int32
+        Int
+    #>
     [CmdletBinding()]
     param (
      # OctoPrint Host Id
@@ -13,12 +25,12 @@ function Invoke-OctoPSToolExtrude {
         [switch]
         $SkipCertificateCheck,
 
-        # Speed for extruding material.
+        # Speed for extruding material in millimeters per minute.
         [Parameter(Mandatory = $false)]
         [Int]
         $Speed,
 
-        # Ammount of material to extrude in MiliMeters, if a negative value is provide the extruder will retract.
+        # Ammount of material to extrude in millimeters, if a negative value is provide the extruder will retract.
         [Parameter(Mandatory = $true)]
         [int]
         $Amount

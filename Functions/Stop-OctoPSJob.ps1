@@ -1,4 +1,15 @@
 function Stop-OctoPSJob {
+     <#
+    .SYNOPSIS
+        Stop the current job on a OctoPrint server.
+    .DESCRIPTION
+        Stop the current job on a OctoPrint server.
+    .EXAMPLE
+        PS C:\> Stop-OctoPSJob -Id 1 -SkipCertificateCheck
+        stop the current print job on the OctoPrint server with Id 1
+    .INPUTS
+        Int32
+    #>
     [CmdletBinding(DefaultParameterSetName = "All")]
     param (
         # Printer Host Id

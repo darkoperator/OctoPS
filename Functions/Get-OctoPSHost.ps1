@@ -1,5 +1,21 @@
 function Get-OctoPSHost
 {
+    <#
+    .SYNOPSIS
+        Get information on one or more stored on a OctoPrint server.
+    .DESCRIPTION
+        Get information on one or more stored on a OctoPrint server.
+    .EXAMPLE
+        PS C:\> Get-OctoPSHost
+        Get all configured printers under the current user.
+    .EXAMPLE
+        PS C:\> Get-OctoPSHost -Id 1,3
+        Get configured printers with the Id 1 and 3 for the current user.
+    .INPUTS
+        Int32
+    .OUTPUTS
+        System.Management.Automation.PSCustomObject
+    #>
     [CmdletBinding()]
     param(
 
@@ -28,7 +44,11 @@ function Get-OctoPSHost
             }
         } else {
             # Return all sessions.
-            foreach($s in $toProcess){$s}
+            foreach($s in $toProcess){
+                $OpHost = $s
+                $OpHost.pstypenames[0] = 'OctoPrint.Host'
+                $OpHost
+            }
         }
     }
     End{}

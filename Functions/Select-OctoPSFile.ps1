@@ -4,14 +4,13 @@
 .DESCRIPTION
     Select a file for printing on a OctoPrint server. The file may be located on the printer SD Card or Local to the OctoPrint server.
 .EXAMPLE
-    PS C:\> <example usage>
-    Explanation of what the example does
+    PS C:\> Select-OctoPSFile -Id 1 -SkipCertificateCheck -Location Local -Path xyzCalibration_cube.gcode
+    Select the xyzCalibration_cube.gcode on the local storage.
+.EXAMPLE
+    PS C:\> Select-OctoPSFile -Id 1 -SkipCertificateCheck -Location Local -Path xyzCalibration_cube.gcode -Print 
+    Select the xyzCalibration_cube.gcode on the local storage and start printing it.
 .INPUTS
-    Inputs (if any)
-.OUTPUTS
-    Output (if any)
-.NOTES
-    General notes
+    Int32
 #>
 function Select-OctoPSFile {
     [CmdletBinding(DefaultParameterSetName = "none")]

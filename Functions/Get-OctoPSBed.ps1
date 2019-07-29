@@ -1,4 +1,25 @@
 function Get-OctoPSBed {
+    <#
+    .SYNOPSIS
+        Get the bed temparature, target and offset for a given OctoPrint server.
+    .DESCRIPTION
+        Get the bed temparature, target and offset for a given OctoPrint server.
+    .EXAMPLE
+        PS C:\> Get-OctoPSBed -SkipCertificateCheck -Id 1
+
+
+            Name        : bed
+            Temperature : 20.43
+            Target      : 0
+            Offset      : 0
+            HostId      : 1
+
+        Get the temperature for the printer with Id 1. 
+    .INPUTS
+        Int32
+    .OUTPUTS
+        OctoPrint.BedInfo
+    #>
     [CmdletBinding()]
     param (
      # OctoPrint Host  Id
@@ -47,6 +68,7 @@ function Get-OctoPSBed {
                 $TProps.Add("Offset", $_."$($toolname)".offset)
                 $TProps.Add('HostId',$h.Id)
                 $ToolObj = New-Object -TypeName psobject -Property $TProps
+                $ToolObj.pstypenames[0] = 'OctoPrint.BedInfo'
                 $ToolObj
             }
         }

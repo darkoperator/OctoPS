@@ -1,4 +1,20 @@
 function New-OctoPSFolder {
+    <#
+    .SYNOPSIS
+        Create a new folder either on local storage on a OctoPrint server or the SDcard of a printer.
+    .DESCRIPTION
+        Create a new folder either on local storage on a OctoPrint server or the SDcard of a printer.
+    .EXAMPLE
+        PS C:\> New-OctoPSFolder -Id 1 -FolderName calibration -Location Local -RemotePath / -SkipCertificateCheck
+        Create a new folder called calibration on the root of the local OctoPrint storage. 
+    .INPUTS
+        Int32
+        Sctring
+    .OUTPUTS
+        OctoPrint.Folder
+    .NOTES
+        Saving to SDCard is very slow due to the nature of the serial connection between OctoPrint and most printers. 
+    #>
     [CmdletBinding()]
     param (
         # Printer Host Id
@@ -23,7 +39,12 @@ function New-OctoPSFolder {
         # The path within the location to create the folder
         [Parameter(Mandatory = $false)]
         [string]
-        $RemotePath
+        $RemotePath,
+
+        # Skips certificate validation checks. This includes all validations such as expiration, revocation, trusted root authority, etc.
+        [Parameter(Mandatory = $false)]
+        [switch]
+        $SkipCertificateCheck
     )
 
     begin {
@@ -55,7 +76,10 @@ public class SSLHandler
         foreach ($h in $PHosts) {
 
             $RestClient = New-Object RestSharp.RestClient
-            $RestClient.RemoteCertificateValidationCallback = [SSLHandler]::GetSSLHandler()
+
+            if ($SkipCertificateCheck) {
+                $RestClient.RemoteCertificateValidationCallback = [SSLHandler]::GetSSLHandler()
+            }
             $RestRequest = New-Object RestSharp.RestRequest
             $RestClient.BaseUrl =  "$($h.Uri)$($UriPath)"
             [void]$RestRequest.AddHeader('X-Api-Key',$h.ApiKey)
@@ -67,6 +91,9 @@ public class SSLHandler
             }
 
             $Response = $RestClient.Execute($RestRequest)
+            if ($Response.ResponseStatus -eq "Error") {
+                Throw $Response.ErrorMessage
+            }
             $FileMeta = (ConvertFrom-Json $response.Content).Folder
             $FProps = New-Object -TypeName System.Collections.Specialized.OrderedDictionary
             $FProps.Add('Name',$FileMeta.name)

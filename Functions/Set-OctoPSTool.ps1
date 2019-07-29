@@ -1,4 +1,15 @@
 function Set-OctoPSTool {
+    <#
+    .SYNOPSIS
+        Set the paramter of a specified tool for temparature and flow rate for a printer on a OctoPrint server.
+    .DESCRIPTION
+        Set the paramter of a specified tool for temparature and flow rate for a printer on a OctoPrint server.
+    .EXAMPLE
+        PS C:\> Set-OctoPSTool -Id 1 -SkipCertificateCheck -TargetTemp 210
+        Set the temperature of the default tool0 to 210 celcius.
+    .INPUTS
+        Int32
+    #>
     [CmdletBinding(DefaultParameterSetName = "Temp")]
     param (
      # OctoPrint Host  Id

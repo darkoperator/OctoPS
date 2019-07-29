@@ -1,4 +1,15 @@
 function Suspend-OctoPSJob {
+     <#
+    .SYNOPSIS
+        Suspend the current job on a OctoPrint server.
+    .DESCRIPTION
+        Suspend the current job on a OctoPrint server.
+    .EXAMPLE
+        PS C:\> Suspend-OctoPSJob -Id 1 -SkipCertificateCheck
+        Suspend the current print job on the OctoPrint server with Id 1
+    .INPUTS
+        Int32
+    #>
     [CmdletBinding(DefaultParameterSetName = "All")]
     param (
         # Printer Host Id

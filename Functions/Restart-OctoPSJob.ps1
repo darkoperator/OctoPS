@@ -1,4 +1,15 @@
 function Restart-OctoPSJob {
+    <#
+    .SYNOPSIS
+        Restart the current job on a OctoPrint server.
+    .DESCRIPTION
+        Restart the current job on a OctoPrint server.
+    .EXAMPLE
+        PS C:\> Restart-OctoPSJob -Id 1 -SkipCertificateCheck
+        Restart the current print job on the OctoPrint server with Id 1
+    .INPUTS
+        Int32
+    #>
     [CmdletBinding(DefaultParameterSetName = "All")]
     param (
         # Printer Host Id

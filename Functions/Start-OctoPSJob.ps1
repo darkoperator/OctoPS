@@ -1,4 +1,15 @@
 function Start-OctoPSJob {
+     <#
+    .SYNOPSIS
+        Start the current job on a OctoPrint server.
+    .DESCRIPTION
+        Start the current job on a OctoPrint server.
+    .EXAMPLE
+        PS C:\> Start-OctoPSJob -Id 1 -SkipCertificateCheck
+        Start the current print job on the OctoPrint server with Id 1
+    .INPUTS
+        Int32
+    #>
     [CmdletBinding(DefaultParameterSetName = "All")]
     param (
         # Printer Host Id

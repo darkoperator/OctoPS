@@ -1,4 +1,15 @@
 function Invoke-OctoPSHomeAxis {
+    <#
+    .SYNOPSIS
+        Home all axis of a printer connected to a OctoPrint server.
+    .DESCRIPTION
+        Home all axis of a printer connected to a OctoPrint server.
+    .EXAMPLE
+        PS C:\> <Invoke-OctoPSHomeAxis -SkipCertificateCheck -Id 1
+        Home all axis (X, Y and X)
+    .INPUTS
+        Int32
+    #>
     [CmdletBinding()]
     param (
         # OctoPrint Host  Id

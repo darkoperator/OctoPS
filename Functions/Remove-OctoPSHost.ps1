@@ -1,5 +1,16 @@
 function Remove-OctoPSHost
 {
+    <#
+    .SYNOPSIS
+        Remove a specified OctoPrint from stored host using the Host Id.
+    .DESCRIPTION
+        Remove a specified OctoPrint from stored host using the Host Id.
+    .EXAMPLE
+        PS C:\> Remove-OctoPSHost -Id 2
+        Remove a configured host with Id 2
+    .INPUTS
+        Int32
+    #>
     [CmdletBinding()]
     param(
 

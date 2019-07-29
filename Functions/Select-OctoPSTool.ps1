@@ -1,4 +1,15 @@
 function Select-OctoPSTool {
+     <#
+    .SYNOPSIS
+        Select the default tool for a printer on a OctoPrint server.
+    .DESCRIPTION
+       Select the default tool for a printer on a OctoPrint server.
+    .EXAMPLE
+        PS C:\> Select-OctoPSTool -Tool tool1 -Id 1 -SkipCertificateCheck
+        Set tool1 as the default tool on the OctoPrint server with Id 1
+    .INPUTS
+        Int32
+    #>
     [CmdletBinding(DefaultParameterSetName = "Temp")]
     param (
      # OctoPrint Host  Id

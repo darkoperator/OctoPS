@@ -1,4 +1,16 @@
 function Set-OctoPSHost {
+    <#
+    .SYNOPSIS
+        Saves a new OctoPrint host for use of the cmdlets.
+    .DESCRIPTION
+        Saves a new OctoPrint host for use of the cmdlets. On *nix hosts it is stored in ~/.octops/printservers.json
+        on Windows hosts it is stored in $($Env:AppData)\.octops\printservers.json.
+    .EXAMPLE
+        PS C:\> Set-OctoPSHost -Name CR-10_01 -Uri https://192.168.1.20 -ApiKey 5DC40C3C5BFB41709AC37D3DA558BA28
+        Saves a new printer in the configuration called CR-10_01
+    .INPUTS
+        String
+    #>
     [CmdletBinding(DefaultParameterSetName = 'New')]
     param (
         # Friendly name for OctoPi Server
@@ -8,7 +20,7 @@ function Set-OctoPSHost {
         [string]
         $Name,
 
-        # URI
+        # URI to the OctoPrint host in <http|https>://<host>:<port> format
         [Parameter(
             Mandatory = $true,
             ParameterSetName = 'New')]

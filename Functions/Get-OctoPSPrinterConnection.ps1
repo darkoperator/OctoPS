@@ -1,10 +1,10 @@
 <#
 .SYNOPSIS
-    Get the current printer connection settings and state.
+    Get the current printer connection settings and state on a OctoPrint server.
 .DESCRIPTION
-    Get the current printer connection settings and state.
+    Get the current printer connection settings and state on a OctoPrint server.
 .EXAMPLE
-    PS C:\> Get-OctoPSPrinterConnection
+    PS C:\> Get-OctoPSPrinterConnection -SkipCertificateCheck
 
 
     Profile  : cr-10s
@@ -13,6 +13,10 @@
     BoudRate :
     Options  : @{baudratePreference=115200; baudrates=System.Object[]; portPreference=VIRTUAL; ports=System.Object[]; printerProfilePreference=cr-10s; printerProfiles=System.Object[]}
     HostId   : 1
+.INPUTS
+        Int32
+.OUTPUTS
+    OctoPrint.ConnectionSettings
 #>
 function Get-OctoPSPrinterConnection {
     [CmdletBinding()]

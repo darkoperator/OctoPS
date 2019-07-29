@@ -4,8 +4,8 @@
 .DESCRIPTION
     Get name and information on folders on a OctoPrint server.
 .EXAMPLE
-    PS C:\> <example usage>
-    Explanation of what the example does
+    PS C:\> Get-OctoPSFolder -Id 1 -SkipCertificateCheck -Recurse
+    List all folders and subfolders on a OctoPrint server.
 .INPUTS
     OctoPrint.Host'
 .OUTPUTS

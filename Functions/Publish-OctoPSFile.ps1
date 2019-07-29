@@ -1,17 +1,18 @@
 <#
 .SYNOPSIS
-    Short description
+    Upload a file to a specified location on a OctoPrint server.
 .DESCRIPTION
-    Long description
+    Upload a file to a specified location on a OctoPrint server.
 .EXAMPLE
-    PS C:\> <example usage>
-    Explanation of what the example does
+    PS C:\> Publish-OctoPSFile -Id 1 -Path '/Users/carlos/Desktop/xyzcube.gcode' -Select -Location Local -RemotePath / -SkipCertificateCheck
+    Upload and select a file for printing to the root of the local storage.
 .INPUTS
-    Inputs (if any)
+    Int32
+    String
 .OUTPUTS
-    Output (if any)
+    OctoPrint.File
 .NOTES
-    General notes
+    Saving to SDCard is very slow due to the nature of the serial connection between OctoPrint and most printers. 
 #>
 function Publish-OctoPSFile {
     [CmdletBinding()]
@@ -51,7 +52,12 @@ function Publish-OctoPSFile {
         # The path within the location to upload the file
         [Parameter(Mandatory = $false)]
         [string]
-        $RemotePath
+        $RemotePath,
+
+        # Skips certificate validation checks. This includes all validations such as expiration, revocation, trusted root authority, etc.
+        [Parameter(Mandatory = $false)]
+        [switch]
+        $SkipCertificateCheck
     )
 
     begin {
@@ -67,6 +73,7 @@ public class SSLHandler
 }
 "@
 
+    
     Add-Type -TypeDefinition $code
     }
 
@@ -87,6 +94,11 @@ public class SSLHandler
             $RestClient = New-Object RestSharp.RestClient
             $RestRequest = New-Object RestSharp.RestRequest
             $RestClient.BaseUrl =  "$($h.Uri)$($UriPath)"
+
+            if ($SkipCertificateCheck) {
+                $RestClient.RemoteCertificateValidationCallback = [SSLHandler]::GetSSLHandler()
+            }
+
             [void]$RestRequest.AddHeader('X-Api-Key',$h.ApiKey)
             $RestRequest.Method = [RestSharp.Method]::POST
             [void]$RestRequest.AddFile('file',$FilePath, 'application/octet-stream')
@@ -107,7 +119,12 @@ public class SSLHandler
             }
 
             $Response = $RestClient.Execute($RestRequest)
-            $FileMeta = ($Response[1].Content).files."$($Location)"
+
+            if ($Response.ResponseStatus -eq "Error") {
+                Throw $Response.ErrorMessage
+            }
+            $ResponseContent = ConvertFrom-Json $resposnse[0].Content
+            $FileMeta = $ResponseContent.files."$($Location)"
             $FProps = New-Object -TypeName System.Collections.Specialized.OrderedDictionary
             $FProps.Add('Name',$FileMeta.name)
             $FProps.Add('Origin',$FileMeta.origin)

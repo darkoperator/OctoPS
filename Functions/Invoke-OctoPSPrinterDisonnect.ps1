@@ -9,13 +9,13 @@
     PS C:\>  Get-OctoPSPrinterConnection
 
 
-Profile  : _default
-State    : Closed
-Port     :
-BoudRate :
-Options  : @{baudratePreference=115200; baudrates=System.Object[]; portPreference=VIRTUAL; ports=System.Object[]; printerProfilePreference=cr-10s;
-           printerProfiles=System.Object[]}
-HostId   : 1
+        Profile  : _default
+        State    : Closed
+        Port     :
+        BoudRate :
+        Options  : @{baudratePreference=115200; baudrates=System.Object[]; portPreference=VIRTUAL; ports=System.Object[]; printerProfilePreference=cr-10s;
+                printerProfiles=System.Object[]}
+        HostId   : 1
 #>
 function Invoke-OctoPSPrinterDisconnect {
     [CmdletBinding()]

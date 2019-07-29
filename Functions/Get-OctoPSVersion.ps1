@@ -1,4 +1,21 @@
 function Get-OctoPSVersion {
+    <#
+    .SYNOPSIS
+        Get a given OctoPrint server version information.
+    .DESCRIPTION
+        Get a given OctoPrint server version information.
+    .EXAMPLE
+        PS C:\> Get-OctoPSVersion -SkipCertificateCheck
+
+        api server text
+        --- ------ ----
+        0.1 1.3.11 OctoPrint 1.3.11
+
+    .INPUTS
+        Int32
+    .OUTPUTS
+        OctoPrint.VersionInfo'
+    #>
     [CmdletBinding()]
     param (
      # OctoPrint Host  Id
@@ -37,7 +54,9 @@ function Get-OctoPSVersion {
                 $RestMethodParams.Add('SkipCertificateCheck', $SkipCertificateCheck)
             }
 
-            Invoke-RestMethod @RestMethodParams
+            $versionInfo = Invoke-RestMethod @RestMethodParams
+            $versionInfo.pstypenames[0] = 'OctoPrint.VersionInfo'
+            $versionInfo
         }
 
     }
