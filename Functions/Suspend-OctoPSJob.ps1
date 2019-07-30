@@ -52,7 +52,7 @@ function Suspend-OctoPSJob {
                 $RestMethodParams.Add('SkipCertificateCheck', $SkipCertificateCheck)
             }
 
-            Invoke-RestMethod @RestMethodParams
+            Invoke-RestMethod @RestMethodParams | Out-Null
         }
     }
 

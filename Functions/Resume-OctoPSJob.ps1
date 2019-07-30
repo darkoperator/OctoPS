@@ -51,7 +51,7 @@ function Resume-OctoPSJob {
             {
                 $RestMethodParams.Add('SkipCertificateCheck', $SkipCertificateCheck)
             }
-            Invoke-RestMethod @RestMethodParams
+            Invoke-RestMethod @RestMethodParams | Out-Null
         }
     }
 

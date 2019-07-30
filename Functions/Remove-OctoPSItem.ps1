@@ -60,7 +60,7 @@ function Remove-OctoPSItem {
                 $RestMethodParams.Add('SkipCertificateCheck', $SkipCertificateCheck)
             }
             Write-Verbose -Message "Deleting file at $($Location) named $($Path) from host with Id $($h.Id)"
-            Invoke-RestMethod @RestMethodParams
+            Invoke-RestMethod @RestMethodParams | Out-Null
         }
     }
     

@@ -71,7 +71,7 @@ function Invoke-OctoPSToolExtrude {
            
             
             $RestMethodParams.Add('Body',(ConvertTo-Json -InputObject $body))
-            Invoke-RestMethod @RestMethodParams
+            Invoke-RestMethod @RestMethodParams | Out-Null
         }
     }
 
