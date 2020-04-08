@@ -50,9 +50,6 @@ function Get-OctoPSFolder {
     )
     
     begin {
-        $RestMethodParams = @{
-            'Method'        = "Get"
-        }
 
         switch ($PSCmdlet.ParameterSetName) {
             "All"      { $UriPath = "/api/files" }
@@ -74,7 +71,9 @@ function Get-OctoPSFolder {
             $PHosts = Get-OctoPSHost | Select-Object -First 1
         }
         foreach ($h in $PHosts) {
-
+            $RestMethodParams = @{
+                'Method'        = "Get"
+            }
             $RestMethodParams.Add('URI',"$($h.Uri)$($UriPath)")
             $RestMethodParams.Add('Headers',@{'X-Api-Key' = $h.ApiKey})
 

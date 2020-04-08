@@ -27,8 +27,7 @@ function Get-OctoPSPrinterState {
      # OctoPrint Host  Id
         [Parameter(Mandatory = $False,
             Position = 0,
-        ValueFromPipelineByPropertyName = $true)]
-
+            ValueFromPipelineByPropertyName = $true)]
         [int32[]]
         $Id = @(),
 
@@ -79,9 +78,6 @@ function Get-OctoPSPrinterState {
             if ($ExcludeSD) {$exclusionParam.Add('sd')}
             $QueryPath = $QueryPath + "&exclude=$( $excludeParam -join "," )"
         }
-        $RestMethodParams = @{
-            'Method'        = "Get"
-        }
 
     }
 
@@ -94,7 +90,10 @@ function Get-OctoPSPrinterState {
         }
 
         foreach ($h in $PHosts) {
-        
+            $RestMethodParams = @{
+                'Method'        = "Get"
+            }
+
             $RestMethodParams.Add('URI',"$($h.Uri)$($QueryPath)")
             $RestMethodParams.Add('Headers',@{'X-Api-Key' = $h.ApiKey})
 

@@ -32,9 +32,6 @@ function Invoke-OctoPSHomeAxis {
     )
     
     begin {
-        $RestMethodParams = @{
-            'Method'        = "Post"
-        }
     }
     
     process {
@@ -45,7 +42,9 @@ function Invoke-OctoPSHomeAxis {
             $PHosts = Get-OctoPSHost | Select-Object -First 1
         }
         foreach ($h in $PHosts) {
-
+            $RestMethodParams = @{
+                'Method'        = "Get"
+            }
             $RestMethodParams.Add('URI',"$($h.Uri)/api/printer/printhead")
             $RestMethodParams.Add('Headers',@{'X-Api-Key' = $h.ApiKey})
             $RestMethodParams.Add('ContentType','application/json')

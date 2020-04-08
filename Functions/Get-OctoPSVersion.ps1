@@ -21,7 +21,7 @@ function Get-OctoPSVersion {
      # OctoPrint Host  Id
         [Parameter(Mandatory = $False,
             Position = 0,
-        ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true)]
         [int32[]]
         $Id = @(),
 
@@ -32,10 +32,6 @@ function Get-OctoPSVersion {
     )
     
     begin {
-        $RestMethodParams = @{
-            'Method'        = "Get"
-        }
-
     }
     
     process {
@@ -45,7 +41,9 @@ function Get-OctoPSVersion {
             $PHosts = Get-OctoPSHost 
         }
         foreach ($h in $PHosts) {
-
+            $RestMethodParams = @{
+                'Method'        = "Get"
+            }
             $RestMethodParams.Add('URI',"$($h.Uri)/api/version")
             $RestMethodParams.Add('Headers',@{'X-Api-Key' = $h.ApiKey})
 

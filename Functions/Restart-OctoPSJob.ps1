@@ -25,13 +25,6 @@ function Restart-OctoPSJob {
     )
     
     begin {
-        $commandBody = ConvertTo-Json -InputObject @{"command" = "restart"}
-        $RestMethodParams = @{
-            'Method'        = "Post"
-            'ContentType'   = 'application/json'
-            'Body'          = $commandBody
-        }
-
     }
 
     process {
@@ -42,6 +35,12 @@ function Restart-OctoPSJob {
             $PHosts = Get-OctoPSHost | Select-Object -First 1
         }
         foreach ($h in $PHosts) {
+            $commandBody = ConvertTo-Json -InputObject @{"command" = "restart"}
+            $RestMethodParams = @{
+                'Method'        = "Post"
+                'ContentType'   = 'application/json'
+                'Body'          = $commandBody
+            }
             $RestMethodParams.Add('URI',"$($h.Uri)/api/job")
             $RestMethodParams.Add('Headers',@{'X-Api-Key' = $h.ApiKey})
 

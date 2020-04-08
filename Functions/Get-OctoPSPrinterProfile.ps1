@@ -29,7 +29,7 @@ function Get-OctoPSPrinterProfile {
      # OctoPrint Host  Id
         [Parameter(Mandatory = $False,
             Position = 0,
-        ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true)]
         [int32[]]
         $Id = @(),
 
@@ -40,10 +40,6 @@ function Get-OctoPSPrinterProfile {
     )
     
     begin {
-        $RestMethodParams = @{
-            'Method'        = "Get"
-        }
-
     }
     
     process {
@@ -54,7 +50,9 @@ function Get-OctoPSPrinterProfile {
             $PHosts = Get-OctoPSHost | Select-Object -First 1
         }
         foreach ($h in $PHosts) {
-
+            $RestMethodParams = @{
+                'Method'        = "Get"
+            }
             $RestMethodParams.Add('URI',"$($h.Uri)/api/printerprofiles")
             $RestMethodParams.Add('Headers',@{'X-Api-Key' = $h.ApiKey})
 

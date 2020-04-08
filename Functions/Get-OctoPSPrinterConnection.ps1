@@ -36,9 +36,7 @@ function Get-OctoPSPrinterConnection {
     )
 
     begin {
-        $RestMethodParams = @{
-            'Method'        = "Get"
-        }
+
     }
     
     process {
@@ -49,7 +47,9 @@ function Get-OctoPSPrinterConnection {
             $PHosts = Get-OctoPSHost | Select-Object -First 1
         }
         foreach ($h in $PHosts) {
-
+            $RestMethodParams = @{
+                'Method'        = "Get"
+            }
             $RestMethodParams.Add('URI',"$($h.Uri)/api/connection")
             $RestMethodParams.Add('Headers',@{'X-Api-Key' = $h.ApiKey})
 

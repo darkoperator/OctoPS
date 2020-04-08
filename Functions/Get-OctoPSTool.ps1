@@ -24,7 +24,7 @@ function Get-OctoPSTool {
      # OctoPrint Host  Id
         [Parameter(Mandatory = $False,
             Position = 0,
-        ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true)]
         [int32[]]
         $Id = @(),
 
@@ -35,10 +35,6 @@ function Get-OctoPSTool {
     )
     
     begin {
-        $RestMethodParams = @{
-            'Method'        = "Get"
-        }
-
     }
     
     process {
@@ -49,7 +45,9 @@ function Get-OctoPSTool {
             $PHosts = Get-OctoPSHost | Select-Object -First 1
         }
         foreach ($h in $PHosts) {
-
+            $RestMethodParams = @{
+                'Method'        = "Get"
+            }
             $RestMethodParams.Add('URI',"$($h.Uri)/api/printer/tool?history=false")
             $RestMethodParams.Add('Headers',@{'X-Api-Key' = $h.ApiKey})
 

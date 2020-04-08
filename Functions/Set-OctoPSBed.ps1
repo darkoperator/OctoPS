@@ -15,7 +15,7 @@ function Set-OctoPSBed {
         # OctoPrint Host  Id
         [Parameter(Mandatory = $False,
             Position = 0,
-        ValueFromPipelineByPropertyName = $true)]
+            ValueFromPipelineByPropertyName = $true)]
         [int32[]]
         $Id = @(),
 
@@ -38,9 +38,6 @@ function Set-OctoPSBed {
     )
     
     begin {
-        $RestMethodParams = @{
-            'Method'        = "Post"
-        }
     }
     
     process {
@@ -51,7 +48,9 @@ function Set-OctoPSBed {
             $PHosts = Get-OctoPSHost | Select-Object -First 1
         }
         foreach ($h in $PHosts) {
-
+            $RestMethodParams = @{
+                'Method'        = "Post"
+            }
             $RestMethodParams.Add('URI',"$($h.Uri)/api/printer/bed")
             $RestMethodParams.Add('Headers',@{'X-Api-Key' = $h.ApiKey})
             $RestMethodParams.Add('ContentType','application/json')

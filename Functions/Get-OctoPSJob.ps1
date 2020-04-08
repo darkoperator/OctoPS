@@ -30,6 +30,7 @@ function Get-OctoPSJob {
     param (
         # Printer Host Id
         [Parameter(Mandatory=$false,
+                    ValueFromPipelineByPropertyName=$true,
                    ParameterSetName = 'Index',
                    Position=0)]
         [int32[]]
@@ -42,9 +43,7 @@ function Get-OctoPSJob {
     )
     
     begin {
-        $RestMethodParams = @{
-            'Method'        = "Get"
-        }
+        
 
     }
 
@@ -56,7 +55,9 @@ function Get-OctoPSJob {
             $PHosts = Get-OctoPSHost | Select-Object -First 1
         }
         foreach ($h in $PHosts) {
-
+            $RestMethodParams = @{
+                'Method'        = "Get"
+            }
             $RestMethodParams.Add('URI',"$($h.Uri)/api/job")
             $RestMethodParams.Add('Headers',@{'X-Api-Key' = $h.ApiKey})
 

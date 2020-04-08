@@ -37,10 +37,7 @@ function Remove-OctoPSItem {
 
     )
 
-    begin {
-        $RestMethodParams = @{
-            'Method' =  "Delete"
-        }
+    begin { 
     }
 
     process {
@@ -52,6 +49,9 @@ function Remove-OctoPSItem {
             $PHosts = Get-OctoPSHost | Select-Object -First 1
         }
         foreach ($h in $PHosts) {
+            $RestMethodParams = @{
+                'Method' =  "Delete"
+            }
             $RestMethodParams.Add('URI',"$($h.Uri)$($UriPath)")
             $RestMethodParams.Add('Headers',@{'X-Api-Key' = $h.ApiKey})
 

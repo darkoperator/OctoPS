@@ -50,19 +50,6 @@ function Select-OctoPSFile {
     )
 
     begin {
-        Write-Verbose -Message "Path: $($Path)"
-        $RestMethodParams = @{
-            'Method'        = "Post"
-            'ContentType'   = "application/json"
-        }
-
-        $UriPath = "/api/files/$($Location.ToLower())/$($Path)"
-        $command =  @{"command" = "select"}
-
-        if ($Print) {
-            $command.Add('print',$true)
-        }
-        $RestMethodParams.Add('Body', (ConvertTo-Json -InputObject $command))
     }
 
     process {
@@ -73,6 +60,19 @@ function Select-OctoPSFile {
             $PHosts = Get-OctoPSHost | Select-Object -First 1
         }
         foreach ($h in $PHosts) {
+            Write-Verbose -Message "Path: $($Path)"
+            $RestMethodParams = @{
+                'Method'        = "Post"
+                'ContentType'   = "application/json"
+            }
+
+            $UriPath = "/api/files/$($Location.ToLower())/$($Path)"
+            $command =  @{"command" = "select"}
+
+            if ($Print) {
+                $command.Add('print',$true)
+            }
+            $RestMethodParams.Add('Body', (ConvertTo-Json -InputObject $command))
             $RestMethodParams.Add('URI',"$($h.Uri)$($UriPath)")
             $RestMethodParams.Add('Headers',@{'X-Api-Key' = $h.ApiKey})
 

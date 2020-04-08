@@ -43,12 +43,6 @@ function Invoke-OctoPSPrinterDisconnect {
         }
 
         $Body = ConvertTo-Json -InputObject $commandBody
-        $RestMethodParams = @{
-            'Method'        = "Post"
-            'ContentType'   = 'application/json'
-            'Body'          = $Body
-        }
-
     }
     
     process {
@@ -59,7 +53,11 @@ function Invoke-OctoPSPrinterDisconnect {
             $PHosts = Get-OctoPSHost | Select-Object -First 1
         }
         foreach ($h in $PHosts) {
-
+            $RestMethodParams = @{
+                'Method'        = "Post"
+                'ContentType'   = 'application/json'
+                'Body'          = $Body
+            }
             $RestMethodParams.Add('URI',"$($h.Uri)/api/connection")
             $RestMethodParams.Add('Headers',@{'X-Api-Key' = $h.ApiKey})
 
