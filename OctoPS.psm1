@@ -12,7 +12,11 @@ switch ($PSVersionTable.Platform ) {
 
 if ( Test-Path $ConfigPath -PathType Leaf ) {
     Write-Verbose -Message "Configuration file $($ConfigPath)"
-    [System.Collections.ArrayList]$Global:OctoHost = ConvertFrom-Json (Get-Content -Raw -Path $ConfigPath)
+    
+    [System.Collections.ArrayList]$Global:OctoHost = @()
+    ConvertFrom-Json (Get-Content -Raw -Path $ConfigPath) | ForEach-Object {
+        $Global:OctoHost.Add($_)
+    }
 
 } else {
     Write-Verbose -Message "Configuration file $($ConfigPath) not found."
