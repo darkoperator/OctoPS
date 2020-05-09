@@ -19,7 +19,8 @@ function New-OctoPSFolder {
     param (
         # Printer Host Id
         [Parameter(Mandatory=$false,
-                   ParameterSetName = 'Index')]
+                   ParameterSetName = 'Index',
+                   ValueFromPipelineByPropertyName = $true)]
         [Alias('HostId')]
         [int32[]]
         $Id = @(),
