@@ -102,26 +102,42 @@ function Get-OctoPSPrinterState {
                 $RestMethodParams.Add('SkipCertificateCheck', $SkipCertificateCheck)
             }
 
-            $StateInfo = (Invoke-RestMethod @RestMethodParams)
-            $tools = @()
-            $PPProps = New-Object -TypeName System.Collections.Specialized.OrderedDictionary
-            $PPProps.Add('SDCard',$StateInfo.sd.ready)
-            $PPProps.Add('State',$StateInfo.state.text)
-            $PPProps.Add('BedTemp',$StateInfo.temperature.bed)
-            $StateInfo.temperature | ForEach-Object {
-                $Component = $_
-                $Component.psobject.properties | ForEach-Object {
-                    if ($_.name -like "tool*") {
-                        Write-Verbose $_.name
-                        $tools += New-Object -TypeName psobject -Property @{"$($_.name)" = $Component."$($_.name)"}
+            Try {
+                $StateInfo = (Invoke-RestMethod @RestMethodParams)
+                $tools = @()
+                $PPProps = New-Object -TypeName System.Collections.Specialized.OrderedDictionary
+                $PPProps.Add('SDCard',$StateInfo.sd.ready)
+                $PPProps.Add('State',$StateInfo.state.text)
+                $PPProps.Add('BedTemp',$StateInfo.temperature.bed)
+                $StateInfo.temperature | ForEach-Object {
+                    $Component = $_
+                    $Component.psobject.properties | ForEach-Object {
+                        if ($_.name -like "tool*") {
+                            Write-Verbose $_.name
+                            $tools += New-Object -TypeName psobject -Property @{"$($_.name)" = $Component."$($_.name)"}
+                        }
                     }
                 }
+                $PPProps.Add('Tool',$tools)
+                $PPProps.Add('HostId',$h.Id)
+                $PPObj = New-Object -TypeName psobject -Property $PPProps
+                $PPObj.pstypenames[0] = 'OctoPrint.PrinterState'
+                $PPObj 
+            } catch {
+                if ($_.ErrorDetails -like "*not operational*") {
+                    $PPProps = New-Object -TypeName System.Collections.Specialized.OrderedDictionary
+                    $PPProps.Add('SDCard',"")
+                    $PPProps.Add('State',"Not Operational")
+                    $PPProps.Add('BedTemp',"")
+                    $PPProps.Add('Tool',"")
+                    $PPProps.Add('HostId',$h.Id)
+                    $PPObj = New-Object -TypeName psobject -Property $PPProps
+                    $PPObj.pstypenames[0] = 'OctoPrint.PrinterState'
+                    $PPObj
+                } else {
+                    $_
+                }
             }
-            $PPProps.Add('Tool',$tools)
-            $PPProps.Add('HostId',$h.Id)
-            $PPObj = New-Object -TypeName psobject -Property $PPProps
-            $PPObj.pstypenames[0] = 'OctoPrint.PrinterState'
-            $PPObj
         } 
     }
 
